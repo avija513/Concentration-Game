@@ -1,9 +1,12 @@
-/** 
- * A game board of NxM board of tiles.
- * 
- *  @author PLTW
- * @version 2.0
- */
+ import java.util.ArrayList;
+ import java.util.Random;
+ 
+//  import java.ut
+//  * A game board of NxM board of tiles.
+//  * 
+//  *  @author PLTW
+//  * @version 2.0
+//  */
 
 /** 
  * A Board class for concentration
@@ -25,11 +28,26 @@ public class Board
    */
   public Board()
   {
-   
+    ArrayList<String> arraylist = new ArrayList<>();
+
+
+    for(int i = 0; i<tileValues.length; i++){
+      arraylist.add(tileValues[i]);
+    }
+   for(int c = 0; c<gameboard.length; c++){
+    for(int r = 0; r<gameboard[c].length; r++){
+      int x = (int)(Math.random()*arraylist.size());
+      gameboard[c][r] = new Tile(arraylist.get(x));
+      arraylist.remove(x);
+    }
+   }
+ 
+   }
     /* your code here */ 
+   
 
-  }
 
+  
  /** 
    * Returns a string representation of the board, getting the state of
    * each tile. If the tile is showing, displays its value, 
@@ -41,11 +59,23 @@ public class Board
    */
   public String toString()
   {
- 
+    String table = "";
+    for(int c = 0; c<gameboard.length; c++){
+      for(int r = 0; r<gameboard[c].length; r++){
+        if(gameboard[c][r].isShowingValue() == true){
+          table += gameboard[c][r].getValue() + "\t";
+      }else{
+        table +=  gameboard[c][r].getHidden() + "\t";
+      }
+      
+      }
+     table += "\n";
     /* your code here */
- 
-    return "";
+     }
+    return table;
   }
+    
+  
 
   /** 
    * Determines if the board is full of tiles that have all been matched,
@@ -57,7 +87,13 @@ public class Board
    */
   public boolean allTilesMatch()
   {
-
+    for(int r = 0; r<gameboard.length; r++){
+      for(int c = 0; c<gameboard[r].length; r++){
+        if(gameboard[r][c].matched() == false){
+          return false;
+        }
+      }
+    }
     /* your code  here */
     
     return true;
@@ -76,7 +112,7 @@ public class Board
    */
   public void showValue (int row, int column)
   {
-   
+   gameboard[column][row].show();
     /* your code here */
   }  
 
@@ -97,10 +133,20 @@ public class Board
    * @param col2 the column vlue of Tile 2
    * @return a message indicating whether or not a match occured
    */
-  public String checkForMatch(int row1, int col1, int row2, int col2)
+  public String checkForMatch(int col1, int row1, int col2, int row2)
   {
     String msg = "";
 
+    if(gameboard[row1][col1].getValue().equals(gameboard[row2][col2].getValue())){
+      msg+="matched";
+      showValue(row1,col1);
+      showValue(row2, col2);
+      gameboard[row1][col1].foundMatch();
+      gameboard[row2][col2].foundMatch();
+    }else{
+      gameboard[row1][col1].hide();
+      gameboard[row2][col2].hide();
+    }
      /* your code here */
     
      return msg;
